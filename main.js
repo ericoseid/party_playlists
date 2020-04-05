@@ -1,6 +1,8 @@
 const {AccessCredentialRetriever} = require('./AccessCredentialRetriever.js');
 const {UsersDao} = require('./UsersDao.js');
 const {UserAuthorizationDataDao} = require('./UserAuthorizationDataDao.js');
+const {GetUserInfoHandler} = require('./GetUserInfoHandler');
+const {UserInfoRetriever} = require('./UserInfoRetriever');
 const express = require('express');
 const app = express();
 
@@ -12,8 +14,28 @@ app.get('/get_user', (req, res) => {
 	thing.getUserInfo(req.query.name);
 
 	thing.on('row', (row) => {
-		res.send(row);
+		const ret = [];
+		if (row) {
+			ret.push(row);
+		}
+
+		res.send(ret);
 	});
+});
+
+app.get('/get_user_info', (req, res) => {
+	res.append('Access-Control-Allow-Origin', '*');
+
+	const getUserInfoHandler = new GetUserInfoHandler();
+	const userInfoRetriever = new UserInfoRetriever();
+
+	getUserInfoHandler.handle(req.query.user, (err, response) => {
+		if (err){
+			res.send({status : 'failure'});
+		} else {
+			res.send(response);
+		}
+	})
 });
 
 app.get('/authorize_user', (req, res) => {

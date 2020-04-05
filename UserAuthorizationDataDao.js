@@ -2,8 +2,10 @@ const db = require('mysql');
 const EventEmitter = require('events');
 
 class UserAuthorizationDataDao extends EventEmitter {
-  storeAutorizationInfo(user, accessToken, refreshToken) {
-    const connection = db.createConnection({
+  constructor() {
+    super();
+
+    this.connection = db.createConnection({
 			host : 'localhost',
 			user : 'root',
 			password : 'testPass',
@@ -11,12 +13,15 @@ class UserAuthorizationDataDao extends EventEmitter {
 			port : 3004,
 			insecureAuth : true
 		});
+  }
+
+  storeAutorizationInfo(user, accessToken, refreshToken) {
 
     const query = `INSERT INTO userAuthorizationInfo
                   (user, accessToken, refreshToken) VALUES
                   (\'${user}\', \'${accessToken}\', \'${refreshToken}\');`;
 
-    connection.query(query, (error, results, fields) => {
+    this.connection.query(query, (error, results, fields) => {
       if (error) {
         console.log(error);
       } else {
@@ -24,6 +29,17 @@ class UserAuthorizationDataDao extends EventEmitter {
       }
 
       connection.destroy();
+    });
+  }
+
+  retrieveAuthorizationInfo(user, callback) {
+    const query = `SELECT * FROM userAuthorizationInfo WHERE user=\'${user}\';`;
+
+    this.connection.query(query, (error, results, fields) => {
+        if (error) {
+          console.log(error);
+        }
+        setImmediate(callback, error, results);
     });
   }
 }
