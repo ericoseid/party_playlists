@@ -43,7 +43,6 @@ function updateAuthorizationToken(user, authorizationToken, callback) {
                 WHERE user='${user}';`;
 
   connection.query(query, (error, results, fields) => {
-    console.log(error);
     setImmediate(callback, error);
 
     connection.destroy();

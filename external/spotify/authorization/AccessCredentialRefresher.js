@@ -58,6 +58,4 @@ function refreshAccessCredentials(accessToken, callback) {
 	request.end();
 }
 
-const refreshToken = 'AQByNOaGIJCnidiU9dWNfVZ3Y1Xm3QdqtTwWKaZGUmVKvznDKGnxFwQHWj3JrzdTxXhCuc6jZE6iH8cpW2zRFc2jAUHtesHIM8zwz-wEO5NzbqsZ0eZBzxfVXP0NK2tBUOc';
-
-refreshAccessCredentials(refreshToken, (err, res) => {console.log(res);});
+module.exports.refreshAccessCredentials = refreshAccessCredentials;
