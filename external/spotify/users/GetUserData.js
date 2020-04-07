@@ -35,10 +35,4 @@ function getUserData(accessToken, callback) {
 
 const accessToken = 'BQAW_RyaTxYM_b-1RouLSGggz-gI8QjOEGURd1Fc_f0cA0RVqo9abkC29u_rFansUp1ejLy1aNih6DIc7FCbLrkZGCKCBvArlmjxuEcZAtaS6fJPF2wgc6aWgX7wOgXVz71kzdy8od4bXcdm';
 
-getUserData(accessToken, (err, res) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(res);
-  }
-});
+module.exports.getUserData = getUserData;
