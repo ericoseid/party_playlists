@@ -1,12 +1,9 @@
-const {retrieveAuthorizationData} =
-  require('../persistence/UserAuthorizationDataDao.js');
-const {updateAuthorizationToken} =
-  require('../persistence/UserAuthorizationDataDao.js');
+const userAuthDb = require('/home/ericoseid/party_playlists/persistence/UserAuthorizationDataDao.js');
 const {refreshAccessCredentials} =
   require('../external/spotify/authorization/AccessCredentialRefresher.js');
 
 function refreshAndUpdateAuthorizationData(user, callback) {
-  retrieveAuthorizationData(user, (err, row) => {
+  userAuthDb.retrieveAuthorizationData(user, (err, row) => {
     if (err) {
       setImmediate(callback, err);
     } else {
@@ -14,7 +11,7 @@ function refreshAndUpdateAuthorizationData(user, callback) {
         if (err) {
           setImmediate(callback, err);
         } else {
-          updateAuthorizationToken(user, res.access_token, (err) => {
+          userAuthDb.updateAuthorizationToken(user, res.access_token, (err) => {
             setImmediate(callback, err);
           });
         }

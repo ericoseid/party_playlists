@@ -2,7 +2,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const https = require('https');
 const {EventEmitter} = require('events');
-const {refreshAccessCredentials} = require(`/home/ericoseid/party_playlists/external/spotify/authorization/AccessCredentialRefresher.js`);
+const refresher = require(`/home/ericoseid/party_playlists/external/spotify/authorization/AccessCredentialRefresher.js`);
 
 describe('AccessCredentialRefresher', () => {
 const REFRESH_TOKEN = 'refreshToken';
@@ -44,7 +44,7 @@ describe('refreshAccessCredentials', () => {
     it('passes the error to the callback', (done) => {
       setImmediate(() => request.emit(ERROR_EVENT, ERROR_MESSAGE));
 
-      refreshAccessCredentials(REFRESH_TOKEN, (err, res) => {
+      refresher.refreshAccessCredentials(REFRESH_TOKEN, (err, res) => {
         assert.equal(ERROR_MESSAGE, err);
 
         assert.equal(1, request.write.callCount);
@@ -69,7 +69,7 @@ describe('refreshAccessCredentials', () => {
         response.emit(END_EVENT);
       })
 
-      refreshAccessCredentials(REFRESH_TOKEN, (err, res) => {
+      refresher.refreshAccessCredentials(REFRESH_TOKEN, (err, res) => {
         assert.equal(1, res.testField);
 
         assert.equal(1, response.setEncoding.callCount);

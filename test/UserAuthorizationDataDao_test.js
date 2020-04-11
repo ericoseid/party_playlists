@@ -1,9 +1,7 @@
 const assert = require('assert');
 const sinon = require('sinon');
 const mysql = require('mysql');
-const {storeAuthorizationData,
-       retrieveAuthorizationData,
-       updateAuthorizationToken} =
+const userAuthDao =
   require('../persistence/UserAuthorizationDataDao.js');
 
 describe('UserAuthorizationDataDAO', () => {
@@ -47,9 +45,8 @@ describe('storeAuthorizationData', () => {
       connection.query
                 .withArgs(query, sinon.match.func)
                 .yields('error', undefined, undefined);
-
-      storeAuthorizationData(USER, ACCESS_TOKEN, REFRESH_TOKEN,
-                             (error) => {
+      
+      userAuthDao.storeAuthorizationData(USER, ACCESS_TOKEN, REFRESH_TOKEN, (error) => {
         assert.ok(error);
 
         done();
@@ -64,7 +61,7 @@ describe('storeAuthorizationData', () => {
                 .withArgs(query, sinon.match.func)
                 .yields(undefined, ['row'], undefined);
 
-      storeAuthorizationData(USER, ACCESS_TOKEN, REFRESH_TOKEN,
+      userAuthDao.storeAuthorizationData(USER, ACCESS_TOKEN, REFRESH_TOKEN,
                              (error) => {
         assert.ok(!error);
 
@@ -84,7 +81,7 @@ describe('retrieveAuthorizationData', () => {
                 .withArgs(query, sinon.match.func)
                 .yields('error', undefined, undefined);
 
-      retrieveAuthorizationData('eric', (error, row) => {
+      userAuthDao.retrieveAuthorizationData('eric', (error, row) => {
         assert.ok(error);
         assert.ok(!row);
 
@@ -100,7 +97,7 @@ describe('retrieveAuthorizationData', () => {
                 .withArgs(query, sinon.match.func)
                 .yields(undefined, ['row'], undefined);
 
-      retrieveAuthorizationData(USER, (error, row) => {
+      userAuthDao.retrieveAuthorizationData(USER, (error, row) => {
         assert.ok(!error);
         assert.strictEqual('row', row[0]);
 
@@ -122,7 +119,7 @@ describe('updateAuthorizationToken', () => {
                 .withArgs(query, sinon.match.func)
                 .yields('error', undefined, undefined);
 
-      updateAuthorizationToken(USER, ACCESS_TOKEN, (error) => {
+      userAuthDao.updateAuthorizationToken(USER, ACCESS_TOKEN, (error) => {
         assert.ok(error);
 
         done();
@@ -137,7 +134,7 @@ describe('updateAuthorizationToken', () => {
                 .withArgs(query, sinon.match.func)
                 .yields(undefined, ['row'], undefined);
 
-      updateAuthorizationToken(USER, ACCESS_TOKEN, (error) => {
+      userAuthDao.updateAuthorizationToken(USER, ACCESS_TOKEN, (error) => {
         assert.ok(!error);
 
         done();
