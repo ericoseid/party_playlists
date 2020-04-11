@@ -6,6 +6,7 @@ const {storeAuthorizationData,
        updateAuthorizationToken} =
   require('../persistence/UserAuthorizationDataDao.js');
 
+describe('UserAuthorizationDataDAO', () => {
 const USER = 'eric';
 const ACCESS_TOKEN = 'accessToken';
 const REFRESH_TOKEN = 'refreshToken';
@@ -143,4 +144,5 @@ describe('updateAuthorizationToken', () => {
       });
     });
   });
+});
 });

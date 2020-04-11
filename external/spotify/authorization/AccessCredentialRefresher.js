@@ -32,8 +32,8 @@ function generateRequestOptions(postData) {
   );
 }
 
-function refreshAccessCredentials(accessToken, callback) {
-  const postData = generatePostData(accessToken);
+function refreshAccessCredentials(refreshToken, callback) {
+  const postData = generatePostData(refreshToken);
 
   const requestOptions = generateRequestOptions(postData);
 
