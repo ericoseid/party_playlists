@@ -1,4 +1,5 @@
 const db = require('mysql');
+const util = require('util');
 
 const CONNECTION_INFO = {
   host : 'localhost',
@@ -23,17 +24,16 @@ async function createUser(newUserData) {
   const connection = db.createConnection(CONNECTION_INFO);
   
   const values = getQueryValues(newUserData);
-  
-  connection.query(QUERY_STRING, values, (err, results, fields) => {
 
+  const query = util.promisify(connection.query);
+
+  try {
+    await query(QUERY_STRING, values);
+  } catch (e) {
+    throw e;
+  } finally {
     connection.destroy();
-
-    if (err) {
-      throw err;
-    } else {
-      return results;
-    }
-  });
+  }
 }
 
 module.exports.createUser = createUser;

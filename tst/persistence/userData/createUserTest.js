@@ -17,6 +17,9 @@ const QUERY_STRING =
   user_password, auth_token, refresh_token, creation_date) 
   VALUES (?, ?, ?, ?, ?, ?, ?);`;
 
+const valueList = ['test_val', undefined, undefined, undefined,
+undefined, undefined, undefined];
+
 describe('createUser', () => {
   let connection;
   let createConnection;
@@ -24,19 +27,34 @@ describe('createUser', () => {
   beforeEach(() => {
     connection = {
       query : sinon.stub(),
-      destroy : sinon.stub()
+      destroy : sinon.spy()
     };
   
     createConnection = sinon.stub(db, 'createConnection');
 
     createConnection.withArgs(CONNECTION_INFO).returns(connection);
-  })
+  });
+
+  afterEach(() => {
+    sinon.assert.calledOnce(connection.destroy);
+
+    sinon.restore();
+  });
+
+  describe('when the query succeeds', () => {
+    it('returns the result', async () => {
+      connection.query
+                .withArgs(QUERY_STRING, 
+                          sinon.match.array.deepEquals(valueList),
+                          sinon.match.func)
+                .yields(undefined, 'result', undefined);
+      
+      await createUser({user_name : 'test_val'});
+    });
+  });
 
   describe('when the query fails', () => {
     it('throws an error', async () => {
-      const valueList = ['test_val', undefined, undefined, undefined,
-                         undefined, undefined, undefined];
-
       connection.query
                 .withArgs(QUERY_STRING, 
                           sinon.match.array.deepEquals(valueList),
