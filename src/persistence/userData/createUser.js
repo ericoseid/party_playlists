@@ -20,20 +20,22 @@ function getQueryValues(data) {
           data.auth_token, data.refresh_token, data.creation_date];
 }
 
-async function createUser(newUserData) {
+function createUser(newUserData) {
   const connection = db.createConnection(CONNECTION_INFO);
   
   const values = getQueryValues(newUserData);
 
-  const query = util.promisify(connection.query);
+  return new Promise((resolve, reject) => {
+    connection.query(QUERY_STRING, values, (err) => {
+      connection.destroy();
 
-  try {
-    await query(QUERY_STRING, values);
-  } catch (e) {
-    throw e;
-  } finally {
-    connection.destroy();
-  }
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
 }
 
 module.exports.createUser = createUser;
