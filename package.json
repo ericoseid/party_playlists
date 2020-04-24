@@ -15,7 +15,7 @@
     "mocha": "^7.1.1"
   },
   "scripts": {
-    "test": "nyc --reporter=html mocha"
+    "test": "nyc --reporter=html mocha './tst' --recursive"
   },
   "repository": {
     "type": "git",

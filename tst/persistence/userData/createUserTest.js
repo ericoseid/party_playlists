@@ -54,12 +54,12 @@ describe('createUser', () => {
   });
 
   describe('when the query fails', () => {
-    it('throws an error', async () => {
+    it('returns the error code', async () => {
       connection.query
                 .withArgs(QUERY_STRING, 
                           sinon.match.array.deepEquals(valueList),
                           sinon.match.func)
-                .yields('error', undefined, undefined);
+                .yields({errno: 1062}, undefined, undefined);
 
       let ok;
 
@@ -68,6 +68,8 @@ describe('createUser', () => {
 
         ok = false;
       } catch (err) {
+        assert.equal(1062, err);
+
         ok = true;
       } finally {
         assert.ok(ok);

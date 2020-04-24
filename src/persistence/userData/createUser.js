@@ -30,7 +30,7 @@ function createUser(newUserData) {
       connection.destroy();
 
       if (err) {
-        reject(err);
+        reject(err.errno);
       } else {
         resolve();
       }
