@@ -6,7 +6,6 @@ const {queryUserData} = require('../../src/persistence/userData/queryUserData');
 const handler = require('/home/ericoseid/party_playlists/src/requestHandlers/createUserRequestHandler.js');
 
 const TEST_REQUEST = {user_name : 'test_field', user_email : 'email'};
-const TEST_EMAIL = 
 
 describe('handleCreateUserRequest', () =>{
 
