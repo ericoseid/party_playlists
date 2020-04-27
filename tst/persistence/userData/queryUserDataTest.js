@@ -13,10 +13,6 @@ const CONNECTION_INFO = {
   insecureAuth : true
 };
 
-const QUERY_STRING = 'SELECT * FROM user_data WHERE user_name=?;';
-
-const VALUE_LIST = ['user'];
-
 let connection;
 
 describe('queryUserData', () => {
@@ -27,23 +23,101 @@ describe('queryUserData', () => {
     };
 
     createConnection = sinon.stub(sql, 'createConnection');
+
+    createConnection.withArgs(CONNECTION_INFO).returns(connection);
   });
+
+  afterEach(() => {
+    sinon.restore();
+  })
 
   describe('queryByUserName', () => {
     describe('when the query succeeds', () => {
       it('returns the row', async () => {
-        createConnection.withArgs(CONNECTION_INFO).returns(connection);
+        const queryString = 'SELECT * FROM user_data WHERE user_name=?;';
+        
+        const valueList = ['user'];
 
         connection.query
-                  .withArgs(QUERY_STRING, 
-                            sinon.match.array.deepEquals(VALUE_LIST),
+                  .withArgs(queryString, 
+                            sinon.match.array.deepEquals(valueList),
                             sinon.match.func)
                   .yields(undefined, ['row']);
         
         const result = await queryUserData.queryByUserName('user');
 
-        assert.equal('row', result[0]);
+        assert.equal('row', result[0]); 
+        assert.ok(connection.destroy.calledOnce); 
+      }); 
+    });
+   }); 
+   
+   describe('queryByUserName', () => { 
+     describe('when the query fails', () => { 
+       it('rejects with the error', async () => { 
+        const queryString = 'SELECT * FROM user_data WHERE user_name=?;'; 
+
+        const valueList = ['user'];
+
+        connection.query.withArgs(queryString, 
+                                  sinon.match.array.deepEquals(valueList), 
+                                  sinon.match.func).yields('error', undefined); 
+
+        let ok = false; 
+
+        try { 
+          await queryUserData.queryByUserName('user'); 
+        } catch (err) { 
+          assert.equal('error', err); 
+          ok = true; } 
+        finally { 
+          assert.ok(ok); 
+        } 
+        }); 
+      }); 
+    }); 
+
+  describe('queryByUserEmail', () => { 
+    describe('when the query succeeds', () => { 
+      it('returns the row', async () => {
+        const queryString = 'SELECT * FROM user_data WHERE user_email=?;';
+        
+        const valueList = ['email'];
+
+        connection.query.withArgs(queryString,
+                                  sinon.match.array.deepEquals(valueList),
+                                  sinon.match.func).yields(undefined, ['row']);
+        
+        const res = await queryUserData.queryByUserEmail('email');
+
+        assert.equal('row', res[0]);
+        assert.ok(connection.destroy.calledOnce);
       });
     });
   });
-});
+
+  describe('queryByUserEmail', () => {
+    describe('when the query fails', () => {
+      it('rejects with the error', async () => {
+        const queryString = 'SELECT * FROM user_data WHERE user_email=?;'; 
+
+        const valueList = ['email'];
+
+        connection.query.withArgs(queryString, 
+                                  sinon.match.array.deepEquals(valueList), 
+                                  sinon.match.func).yields('error', undefined); 
+
+        let ok = false; 
+
+        try { 
+          await queryUserData.queryByUserEmail('email'); 
+        } catch (err) { 
+          assert.equal('error', err); 
+          ok = true; } 
+        finally { 
+          assert.ok(ok); 
+        } 
+      });
+    });
+  });
+});                     

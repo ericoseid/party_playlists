@@ -9,21 +9,42 @@ const CONNECTION_INFO = {
   insecureAuth : true
 };
 
-const QUERY_STRING = 'SELECT * FROM user_data WHERE user_name=?;';
 
 const queryUserData = {
   queryByUserName : function(userName) {
     const connection = sql.createConnection(CONNECTION_INFO);
 
-    return new Promise((resolve, reject) => {
-      connection.query(QUERY_STRING, [userName], (err, rows) => {
-        if (err) {
+    const queryString = 'SELECT * FROM user_data WHERE user_name=?;';
 
+    return new Promise((resolve, reject) => {
+      connection.query(queryString, [userName], (err, rows) => {
+        connection.destroy();
+
+        if (err) {
+          reject(err);
         } else {
           resolve(rows);
         }
       })
     });
+  },
+
+  queryByUserEmail : function(email) {
+    const connection = sql.createConnection(CONNECTION_INFO);
+
+    const queryString = 'SELECT * FROM user_data WHERE user_email=?;';
+
+    return new Promise((resolve, reject) => {
+      connection.query(queryString, [email], (err, rows) => {
+        connection.destroy();
+
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      })
+    })
   }
 };
 
