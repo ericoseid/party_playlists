@@ -9,7 +9,6 @@ const CONNECTION_INFO = {
   insecureAuth : true
 };
 
-
 const queryUserData = {
   queryByUserName : function(userName) {
     const connection = sql.createConnection(CONNECTION_INFO);

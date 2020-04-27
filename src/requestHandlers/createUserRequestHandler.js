@@ -1,17 +1,56 @@
 const createUserModule = require('/home/ericoseid/party_playlists/src/persistence/userData/createUser.js');
+const {queryUserData} = require('../persistence/userData/queryUserData.js');
 
 async function handleCreateUserRequest(requestBody) {
-  if (!requestBody) {
-    throw new Error('request body not present');
-  } else if (!requestBody.user_name) {
-    throw new Error('username not present in request')
-  }
+  if (!requestBody || !requestBody.user_name || !requestBody.user_email) {
+    return(400);
+  } 
 
   try {
-    createUserModule.createUser(requestBody);
+    await createUserModule.createUser(requestBody);
+
+    return(200);
   } catch (e) {
-    throw e;
+    if (1062 === e) {
+      return await handleDuplicateColumnError(requestBody);
+    } else {
+      return(500);
+    }
   }
 }
 
+async function handleDuplicateColumnError(requestBody) {
+  try {
+    const userNameExists = await doesUserNameExist(requestBody);
+
+    if (userNameExists) {
+      return(405);
+    }
+
+    const userEmailExists = await doesUserEmailExist(requestBody);
+
+    if (userEmailExists) {
+      return(406);
+    }
+
+    return(500);
+  } catch (e) {
+    return(500);
+  }
+}
+
+async function doesUserNameExist(requestBody) {
+  const row = await queryUserData.queryByUserName(requestBody.user_name);
+
+  return row.length > 0;
+}
+
+async function doesUserEmailExist(requestBody) {
+  const row = await queryUserData.queryByUserEmail(requestBody.user_email);
+
+  return row.length > 0;
+}
+
 module.exports.handleCreateUserRequest = handleCreateUserRequest;
+
+handleCreateUserRequest({user_name : 'eric'});
