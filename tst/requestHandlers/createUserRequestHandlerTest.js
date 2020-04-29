@@ -104,7 +104,7 @@ describe('handleCreateUserRequest', () =>{
         
         let res = await handler.handleCreateUserRequest(TEST_REQUEST);
 
-        assert.equal(405, res);
+        assert.equal(470, res);
       });
     });
   });
@@ -123,7 +123,7 @@ describe('handleCreateUserRequest', () =>{
         
         let res = await handler.handleCreateUserRequest(TEST_REQUEST);
 
-        assert.equal(406, res);
+        assert.equal(471, res);
       });
     });
   });

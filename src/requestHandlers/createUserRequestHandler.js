@@ -24,13 +24,13 @@ async function handleDuplicateColumnError(requestBody) {
     const userNameExists = await doesUserNameExist(requestBody);
 
     if (userNameExists) {
-      return(405);
+      return(470);
     }
 
     const userEmailExists = await doesUserEmailExist(requestBody);
 
     if (userEmailExists) {
-      return(406);
+      return(471);
     }
 
     return(500);
