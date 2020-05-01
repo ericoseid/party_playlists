@@ -7,7 +7,7 @@ function generatePostData(authCode) {
 			{
 				grant_type : 'authorization_code',
 				code : authCode,
-				redirect_uri : 'http://127.0.0.1:3001/authorize_user',
+				redirect_uri : 'http://127.0.0.1:3000/CompleteAccount',
 				client_id : '90bb1e9b33d9402b887b698376c36715',
 				client_secret : '7cab6eb568bc4a41afb28f8d3d3a0670'
 			}

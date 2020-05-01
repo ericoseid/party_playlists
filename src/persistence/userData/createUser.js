@@ -17,7 +17,7 @@ const QUERY_STRING =
 
 function getQueryValues(data) {
   return [data.user_name, data.user_email, data.spotify_id, data.user_password,
-          data.auth_token, data.refresh_token, data.creation_date];
+          data.auth_token, data.refresh_token, new Date()];
 }
 
 function createUser(newUserData) {

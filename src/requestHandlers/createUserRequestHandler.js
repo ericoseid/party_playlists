@@ -2,7 +2,11 @@ const createUserModule = require('/home/ericoseid/party_playlists/src/persistenc
 const {queryUserData} = require('../persistence/userData/queryUserData.js');
 
 async function handleCreateUserRequest(requestBody) {
-  if (!requestBody || !requestBody.user_name || !requestBody.user_email) {
+  console.log(`Entering handle create user request`);
+
+  if (!requestBody || !requestBody.user_name || 
+      !requestBody.user_email || !requestBody.user_password) {
+    console.log('Missing request parameters');
     return(400);
   } 
 
@@ -11,6 +15,8 @@ async function handleCreateUserRequest(requestBody) {
 
     return(200);
   } catch (e) {
+    console.log(e);
+
     if (1062 === e) {
       return await handleDuplicateColumnError(requestBody);
     } else {
@@ -52,5 +58,3 @@ async function doesUserEmailExist(requestBody) {
 }
 
 module.exports.handleCreateUserRequest = handleCreateUserRequest;
-
-handleCreateUserRequest({user_name : 'eric'});
