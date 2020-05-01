@@ -1,22 +1,26 @@
 const retrieveAccessCredentialsMod = require('../../external/spotify/auth/AccessCredentialRetriever');
 const UserDataRetriever = require('../../external/spotify/users/getUserData');
+const {updateUserInfoWithSpotifyInfo} = require('../../persistence/userData/updateUserInfoWithSpotifyInfo');
 
 async function handleCompleteUserRequest(requestBody) {
-  let authData;
+  if (!requestBody.auth_code || !requestBody.user_name) {
+    return '400';
+  }
+  
   try {
-    authData = await retrieveAccessCredentialsPromise(requestBody.auth_code);
+    const authData = await retrieveAccessCredentialsPromise(requestBody.auth_code);
+    
+    const userData  = await getUserDataPromise(authData.access_token);
+    
+    updateUserInfoWithSpotifyInfo(requestBody.user_name,
+                                  userData.id, 
+                                  authData.access_token, 
+                                  authData.refresh_token);
   } catch (err) {
+    console.log(err);
+
     return '500';
   }
-
-  let userData;
-  try {
-    userData  = await getUserDataPromise(authData.access_token);
-  } catch (err) {
-    return '500';
-  }
-
-  console.log(userData);
 
   return '200';
 }
