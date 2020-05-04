@@ -31,30 +31,32 @@ const AccessCredentialRefresher = {
     );
   },
 
-  refreshAccessCredentials : function(refreshToken, callback) {
+  refreshAccessCredentials : function(refreshToken) {
     const postData = this.generatePostData(refreshToken);
 
     const requestOptions = this.generateRequestOptions(postData);
 
-    const request = https.request(requestOptions, (res) => {
-      res.setEncoding('utf8');
+    return new Promise((resolve, reject) => {
+      const request = https.request(requestOptions, (res) => {
+        res.setEncoding('utf8');
 
-      let data = '';
-      res.on('data', (chunk) => {
-        data += chunk;
+        let data = '';
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+
+        res.on('end', () => {
+          resolve(JSON.parse(data));
+        });
       });
 
-      res.on('end', () => {
-        setImmediate(callback, undefined, JSON.parse(data));
+      request.on('error', (e) => {
+        reject(e);
       });
-    });
 
-    request.on('error', (e) => {
-      setImmediate(callback, e, undefined);
+      request.write(postData);
+      request.end();
     });
-
-    request.write(postData);
-    request.end();
   }
 };
 

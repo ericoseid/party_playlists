@@ -22,7 +22,7 @@ const queryUserData = {
         if (err) {
           reject(err);
         } else {
-          resolve(rows);
+          resolve(rows[0]);
         }
       })
     });
@@ -47,4 +47,4 @@ const queryUserData = {
   }
 };
 
-module.exports.queryUserData = queryUserData;
+module.exports = queryUserData;

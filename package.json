@@ -12,7 +12,7 @@
     "sinon": "^9.0.2"
   },
   "devDependencies": {
-    "mocha": "^7.1.1"
+    "mocha": "^7.1.2"
   },
   "scripts": {
     "test": "nyc --reporter=html mocha './tst' --recursive"
