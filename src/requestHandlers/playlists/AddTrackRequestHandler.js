@@ -20,13 +20,15 @@ const handleAddTrackRequest = async (requestObject) => {
     
     const apiRequest = buildAddTrackToPlaylistRequest(playlistId, trackUri, userData.auth_token);
 
-    await executeSpotifyRequest(addTrackToPlaylist, userData.user_id);
+    await executeSpotifyRequest(addTrackToPlaylist, apiRequest, userData.user_id);
+
+    return ({statusCode : '200'});
   } catch {
     return ({statusCode : '500', message : 'Internal Failure. Please try again after some time.'});
   }
 }
 
-const buildAddTrackToPlaylistRequest = (playlistId, trackUri, authToken) {
+const buildAddTrackToPlaylistRequest = (playlistId, trackUri, authToken) => {
   return ({
     playlistId : playlistId,
     trackUri : trackUri,

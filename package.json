@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "aws-sdk": "^2.670.0",
     "chai": "^4.2.0",
     "express": "^4.17.1",
     "form-urlencoded": "^4.1.3",
