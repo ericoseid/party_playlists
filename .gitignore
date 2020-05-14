@@ -1,4 +1,6 @@
 node_modules
 .nyc_output
 coverage
-
+src/external/s3/S3ObjectRetriever.js
+tst/external/s3/impl/S3ObjectRetrieverDefaultImplTest.js
+src/external/s3/impl/S3ObjectRetrieverDefaultImpl.js
