@@ -4,3 +4,5 @@ coverage
 src/external/s3/S3ObjectRetriever.js
 tst/external/s3/impl/S3ObjectRetrieverDefaultImplTest.js
 src/external/s3/impl/S3ObjectRetrieverDefaultImpl.js
+src/config/AppConfig.js
+tst/config/AppConfigTest.js

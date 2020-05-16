@@ -26,7 +26,7 @@ describe("S3ObjectRetrieverDefaultImpl", () => {
 
     s3Constructor.returns(s3);
 
-    retriever = new S3ObjectRetrieverDefaultImpl();
+    retriever = new S3ObjectRetrieverDefaultImpl(s3);
   });
 
   afterEach(() => {
