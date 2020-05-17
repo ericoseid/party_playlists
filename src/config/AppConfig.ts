@@ -23,6 +23,8 @@ export default class AppConfig {
     );
 
     this.config = this.parseConfigString(configString);
+
+    console.log(`Loaded Configuration: ${JSON.stringify(this.config)}`);
   }
 
   public static initializeFromCustomString(customString: string): void {

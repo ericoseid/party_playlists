@@ -20,7 +20,7 @@ describe("AppConfig", () => {
       let ok = false;
 
       try {
-        await AppConfig.initializeFromS3(s3Retriever);
+        await AppConfig.initializeFromS3();
       } catch (err) {
         ok = err === "ConfigExists";
       } finally {
@@ -36,7 +36,7 @@ describe("AppConfig", () => {
       let ok = false;
 
       try {
-        await AppConfig.initializeFromS3(s3Retriever);
+        await AppConfig.initializeFromS3();
       } catch (err) {
         ok = err === "MalformedConfigError";
       } finally {
@@ -49,7 +49,7 @@ describe("AppConfig", () => {
         .withArgs("jam-list-application-store", "jam-list-configuration")
         .returns(TEST_CONFIG_STRING);
 
-      await AppConfig.initializeFromS3(s3Retriever);
+      await AppConfig.initializeFromS3();
 
       assert.equal("thing", AppConfig.getConfig().test);
     });
