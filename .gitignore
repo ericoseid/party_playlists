@@ -14,3 +14,7 @@ src/persistence/userData/impl/UserDataDaoDefaultImpl.js
 tst/persistence/userData/impl/UserDataDaoDefaultImplTest.js
 src/server.js
 src/testFile.js
+src/data/PlaylistData.js
+src/persistence/playlists/impl/PlaylistDataDaoDefaultImpl.js
+src/persistence/playlists/PlaylistDataDao.js
+tst/persistence/playlists/impl/PlaylistDataDaoDefaultImplTest.js
