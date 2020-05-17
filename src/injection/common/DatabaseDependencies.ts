@@ -1,8 +1,12 @@
 import mysql from "mysql";
 import AppConfig from "../../config/AppConfig";
+import UserDataDaoDefaultImpl from "../../persistence/userData/impl/UserDataDaoDefaultImpl";
+import PlaylistDataDaoDefaultImpl from "../../persistence/playlists/impl/PlaylistDataDaoDefaultImpl";
 
 class DatabaseDependencies {
   private static partyPlaylistDbConnection: mysql.Connection;
+  private static userDataDao: UserDataDao;
+  private static playlistDataDao: PlaylistDataDao;
 
   public static getPartyPlaylistDbConnection(): mysql.Connection {
     if (!this.partyPlaylistDbConnection) {
@@ -12,5 +16,25 @@ class DatabaseDependencies {
     }
 
     return this.partyPlaylistDbConnection;
+  }
+
+  public static getUserDataDao(): UserDataDao {
+    if (!this.userDataDao) {
+      this.userDataDao = new UserDataDaoDefaultImpl(
+        this.getPartyPlaylistDbConnection()
+      );
+    }
+
+    return this.userDataDao;
+  }
+
+  public static getPlaylistDataDao(): PlaylistDataDao {
+    if (!this.playlistDataDao) {
+      this.playlistDataDao = new PlaylistDataDaoDefaultImpl(
+        this.getPartyPlaylistDbConnection()
+      );
+    }
+
+    return this.playlistDataDao;
   }
 }
