@@ -1,13 +1,14 @@
 const express = require("express");
-//const createUserRequestHandlerModule = require("/home/ericoseid/party_playlists/src/requestHandlers/createUserRequestHandler.js");
-//const completeUserRequestHandler = require("./requestHandlers/users/completeUserRequestHandler");
+import RequestHandlerDependencies from "./injection/requestHandlers/RequestHandlerDependencies";
 
 import AppConfig from "./config/AppConfig";
 
-async function configureApp() {
+async function configureAndStartApp() {
   await AppConfig.initializeFromS3();
 
   const app = express();
+  const createAccountRequestHandler: RequestHandler = RequestHandlerDependencies.getCreateAccountRequestHandler();
+  const completeAccountRequestHandler: RequestHandler = RequestHandlerDependencies.getCompleteAccountRequestHandler();
 
   app.use(express.json());
 
@@ -20,33 +21,29 @@ async function configureApp() {
     next();
   });
 
-  //app.post("/users/create", async (req: any, res: any) => {
-  //  console.log(`Received Create User Request: ${JSON.stringify(req.body)}`);
+  app.post("/users/create", async (req: any, res: any) => {
+    console.log(`Received Create User Request: ${JSON.stringify(req.body)}`);
 
-  //  const body = req.body;
+    const body = req.body;
 
-  //  const status = await createUserRequestHandlerModule.handleCreateUserRequest(
-  //    body
-  //  );
+    const status = await createAccountRequestHandler.handle(body);
 
-  //  res.sendStatus(status);
-  //});
+    res.sendStatus(status);
+  });
 
-  //app.post("/users/complete", async (req: any, res: any) => {
-  //  console.log(`Received Complete User Request`);
+  app.post("/users/complete", async (req: any, res: any) => {
+    console.log(`Received Complete User Request: ${JSON.stringify(req.body)}`);
 
-  //  const body = req.body;
+    const body = req.body;
 
-  //  const status = await completeUserRequestHandler.handleCompleteUserRequest(
-  //    body
-  //  );
+    const status = await completeAccountRequestHandler.handle(body);
 
-  //  res.sendStatus(status);
-  //});
+    res.sendStatus(status);
+  });
 
   app.listen(3005);
 }
 
-configureApp()
+configureAndStartApp()
   .then(() => console.log("App Started!"))
   .catch((err) => console.log(err));

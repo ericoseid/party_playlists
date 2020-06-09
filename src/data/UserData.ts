@@ -7,3 +7,7 @@ interface UserData {
   creationDate?: Date;
   [index: string]: any;
 }
+
+function isUserData(object: any): object is UserData {
+  return "username" in object;
+}

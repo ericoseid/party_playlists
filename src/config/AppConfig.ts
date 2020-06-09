@@ -4,7 +4,7 @@ import AWS from "aws-sdk";
 export default class AppConfig {
   private static readonly configBucket: string = "jam-list-application-store";
   private static readonly configKey: string = "jam-list-configuration";
-  private static config: any;
+  private static config: AppConfig | undefined;
 
   private AppConfig() {}
 
@@ -51,7 +51,7 @@ export default class AppConfig {
     }
   }
 
-  private static parseConfigString(configString: string): Object {
+  private static parseConfigString(configString: string): AppConfig {
     try {
       return JSON.parse(configString);
     } catch (err) {
