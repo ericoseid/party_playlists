@@ -38,9 +38,10 @@ export default class HashPasswordCallerDefault implements HashPasswordCaller {
           resolve(JSON.parse(rawData).body);
         });
       });
+
       request.on("error", (err) => reject(err));
 
-      request.write('{"password" : "yeet"}');
+      request.write(postData);
 
       request.end();
     });
