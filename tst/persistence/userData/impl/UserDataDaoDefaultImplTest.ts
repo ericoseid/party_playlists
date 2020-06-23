@@ -3,6 +3,7 @@ import sinon from "sinon";
 import { Connection } from "mysql";
 
 import UserDataDaoDefaultImpl from "../../../../src/persistence/userData/impl/UserDataDaoDefaultImpl";
+import { UserData } from "../../../data/UserData";
 
 describe("UserDataDefaultImpl", () => {
   const USER_DATA: UserData = {

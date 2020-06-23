@@ -1,3 +1,3 @@
 interface RequestHandler {
-  handle: (requestBody: any) => Promise<number>;
+  handle: (requestBody: string) => Promise<RequestResponse>;
 }

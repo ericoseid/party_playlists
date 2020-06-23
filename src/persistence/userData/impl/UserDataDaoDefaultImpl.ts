@@ -1,4 +1,6 @@
 import mysql from "mysql";
+import { UserData } from "../../../data/UserData";
+import { UserDataDao } from "../UserDataDao";
 
 export default class UserDataDaoDefaultImpl implements UserDataDao {
   private dbConnection: mysql.Connection;
@@ -7,7 +9,7 @@ export default class UserDataDaoDefaultImpl implements UserDataDao {
     this.dbConnection = dbConnection;
   }
 
-  createUser(userData: UserData) {
+  createUser(userData: UserData): Promise<void> {
     const queryValues = [
       userData.username,
       userData.userEmail,

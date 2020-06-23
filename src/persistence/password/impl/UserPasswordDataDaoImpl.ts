@@ -1,4 +1,6 @@
 import mysql from "mysql";
+import { UserData } from "../../../data/UserData";
+import { UserPasswordDataDao } from "../UserPasswordDataDao";
 
 export default class UserPasswordDataDaoImpl implements UserPasswordDataDao {
   private static readonly CREATE_QUERY =

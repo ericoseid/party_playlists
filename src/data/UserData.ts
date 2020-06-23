@@ -1,6 +1,6 @@
-interface UserData {
+export interface UserData {
   username: string;
-  userEmail?: string;
+  userEmail: string;
   spotifyId?: string;
   authToken?: string;
   refreshToken?: string;
@@ -8,6 +8,6 @@ interface UserData {
   [index: string]: any;
 }
 
-function isUserData(object: any): object is UserData {
-  return "username" in object;
+export function isUserData(object: any): object is UserData {
+  return "username" in object && "userEmail" in object;
 }

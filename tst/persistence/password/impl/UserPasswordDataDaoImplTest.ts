@@ -3,10 +3,12 @@ import sinon from "sinon";
 import { Connection } from "mysql";
 
 import UserPasswordDataDaoImpl from "../../../../src/persistence/password/impl/UserPasswordDataDaoImpl";
+import { UserPasswordDataDao } from "../UserPasswordDataDao";
 
 describe("UserPasswordDataDaoImpl", () => {
   const USERNAME = "username";
-  const USER_DATA = { username: USERNAME };
+  const EMAIL = "email";
+  const USER_DATA = { username: USERNAME, userEmail: EMAIL };
   const PASSWORD = "password";
   const CREATE_QUERY =
     "insert into UserPassword (username, password) values (?, ?);";

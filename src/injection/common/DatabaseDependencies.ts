@@ -2,6 +2,7 @@ import mysql from "mysql";
 import AppConfig from "../../config/AppConfig";
 import UserDataDaoDefaultImpl from "../../persistence/userData/impl/UserDataDaoDefaultImpl";
 import PlaylistDataDaoDefaultImpl from "../../persistence/playlists/impl/PlaylistDataDaoDefaultImpl";
+import { UserDataDao } from "../../persistence/userData/UserDataDao";
 
 class DatabaseDependencies {
   private static partyPlaylistDbConnection: mysql.Connection;
