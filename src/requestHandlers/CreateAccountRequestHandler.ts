@@ -32,7 +32,9 @@ export default class CreateAccountRequestHandler implements RequestHandler {
       .then(() => {
         return { statusCode: "200" };
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
+
         return { statusCode: "500" };
       });
   }

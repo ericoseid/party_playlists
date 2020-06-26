@@ -15,6 +15,7 @@ export default class UserPasswordDataDaoImpl implements UserPasswordDataDao {
   }
 
   createUserPassword(userData: UserData, password: string): Promise<void> {
+    console.log("Create User Password");
     const queryValues = [userData.username, password];
 
     return new Promise<void>((resolve, reject) => {

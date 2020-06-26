@@ -7,7 +7,7 @@ async function configureAndStartApp() {
   await AppConfig.initializeFromS3();
 
   const app = express();
-  //const createAccountRequestHandler: RequestHandler = RequestHandlerDependencies.getCreateAccountRequestHandler();
+  const createAccountRequestHandler: RequestHandler = RequestHandlerDependencies.getCreateAccountRequestHandler();
   //const completeAccountRequestHandler: RequestHandler = RequestHandlerDependencies.getCompleteAccountRequestHandler();
 
   app.use(express.json());
@@ -21,15 +21,17 @@ async function configureAndStartApp() {
     next();
   });
 
-  //app.post("/users/create", async (req: any, res: any) => {
-  //  console.log(`Received Create User Request: ${JSON.stringify(req.body)}`);
+  app.post("/users/create", async (req: any, res: any) => {
+    console.log(`Received Create User Request: ${JSON.stringify(req.body)}`);
 
-  //  const body = req.body;
+    const body = req.body;
 
-  //  const status = await createAccountRequestHandler.handle(body);
+    const status = await createAccountRequestHandler.handle(
+      JSON.stringify(body)
+    );
 
-  //  res.sendStatus(status);
-  //});
+    res.send(status.statusCode);
+  });
 
   //app.post("/users/complete", async (req: any, res: any) => {
   //  console.log(`Received Complete User Request: ${JSON.stringify(req.body)}`);

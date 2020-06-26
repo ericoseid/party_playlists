@@ -10,6 +10,7 @@ export default class UserDataDaoDefaultImpl implements UserDataDao {
   }
 
   createUser(userData: UserData): Promise<void> {
+    console.log("Create User");
     const queryValues = [
       userData.username,
       userData.userEmail,
@@ -25,6 +26,8 @@ export default class UserDataDaoDefaultImpl implements UserDataDao {
     return new Promise<void>((resolve, reject) => {
       this.dbConnection.query(queryString, queryValues, (err) => {
         if (err) {
+          console.log(err);
+
           reject(err.errno);
         } else {
           resolve();

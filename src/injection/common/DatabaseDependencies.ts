@@ -3,11 +3,14 @@ import AppConfig from "../../config/AppConfig";
 import UserDataDaoDefaultImpl from "../../persistence/userData/impl/UserDataDaoDefaultImpl";
 import PlaylistDataDaoDefaultImpl from "../../persistence/playlists/impl/PlaylistDataDaoDefaultImpl";
 import { UserDataDao } from "../../persistence/userData/UserDataDao";
+import { UserPasswordDataDao } from "../../persistence/password/UserPasswordDataDao";
+import UserPasswordDataDaoImpl from "../../persistence/password/impl/UserPasswordDataDaoImpl";
 
-class DatabaseDependencies {
+export default class DatabaseDependencies {
   private static partyPlaylistDbConnection: mysql.Connection;
   private static userDataDao: UserDataDao;
   private static playlistDataDao: PlaylistDataDao;
+  private static userPasswordDataDao: UserPasswordDataDao;
 
   public static getPartyPlaylistDbConnection(): mysql.Connection {
     if (!this.partyPlaylistDbConnection) {
@@ -37,5 +40,15 @@ class DatabaseDependencies {
     }
 
     return this.playlistDataDao;
+  }
+
+  public static getUserPasswordDataDao(): UserPasswordDataDao {
+    if (!this.userPasswordDataDao) {
+      this.userPasswordDataDao = new UserPasswordDataDaoImpl(
+        this.getPartyPlaylistDbConnection()
+      );
+    }
+
+    return this.userPasswordDataDao;
   }
 }

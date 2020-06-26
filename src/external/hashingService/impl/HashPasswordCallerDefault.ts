@@ -12,6 +12,7 @@ export default class HashPasswordCallerDefault implements HashPasswordCaller {
   };
 
   callHashPassword(password: string): Promise<string> {
+    console.log("call hash password");
     const postData = this.generatePostData(password);
 
     return new Promise<string>((resolve, reject) => {
