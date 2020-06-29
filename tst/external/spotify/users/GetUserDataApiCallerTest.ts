@@ -13,7 +13,7 @@ describe("GetUserDataApiCaller", () => {
   let get: any;
   let getRequest: EventEmitter;
   let getResponse: any;
-  let apiCaller: SpotifyApiCaller;
+  let apiCaller: GetUserDataApiCaller;
 
   beforeEach(() => {
     get = sinon.stub(https, "get");

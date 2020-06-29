@@ -65,12 +65,22 @@ export default class UserDataDaoDefaultImpl implements UserDataDao {
   queryByUsername(username: String) {
     const queryString = `SELECT * FROM user_data WHERE username="${username}";`;
 
-    return new Promise<UserData>((resolve, reject) => {
+    return this.getQueryPromise(queryString);
+  }
+
+  queryByEmail(email: string) {
+    const queryString = `SELECT * FROM user_data WHERE userEmail="${email}";`;
+
+    return this.getQueryPromise(queryString);
+  }
+
+  private getQueryPromise(queryString: string): Promise<UserData[]> {
+    return new Promise<UserData[]>((resolve, reject) => {
       this.dbConnection.query(queryString, (err, row) => {
         if (err) {
           reject(err.errno);
         } else {
-          resolve(row[0]);
+          resolve(row);
         }
       });
     });

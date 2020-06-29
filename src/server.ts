@@ -8,7 +8,7 @@ async function configureAndStartApp() {
 
   const app = express();
   const createAccountRequestHandler: RequestHandler = RequestHandlerDependencies.getCreateAccountRequestHandler();
-  //const completeAccountRequestHandler: RequestHandler = RequestHandlerDependencies.getCompleteAccountRequestHandler();
+  const completeAccountRequestHandler: RequestHandler = RequestHandlerDependencies.getCompleteAccountRequestHandler();
 
   app.use(express.json());
 
@@ -26,22 +26,22 @@ async function configureAndStartApp() {
 
     const body = req.body;
 
-    const status = await createAccountRequestHandler.handle(
-      JSON.stringify(body)
-    );
+    const status = await createAccountRequestHandler.handle(body);
 
-    res.send(status.statusCode);
+    console.log(status);
+
+    res.sendStatus(status.statusCode);
   });
 
-  //app.post("/users/complete", async (req: any, res: any) => {
-  //  console.log(`Received Complete User Request: ${JSON.stringify(req.body)}`);
+  app.post("/users/complete", async (req: any, res: any) => {
+    console.log(`Received Complete User Request: ${JSON.stringify(req.body)}`);
 
-  //  const body = req.body;
+    const body = req.body;
 
-  //  const status = await completeAccountRequestHandler.handle(body);
+    const status = await completeAccountRequestHandler.handle(body);
 
-  //  res.sendStatus(status);
-  //});
+    res.set(status.statusCode).json(status.body);
+  });
 
   app.listen(3005);
 }

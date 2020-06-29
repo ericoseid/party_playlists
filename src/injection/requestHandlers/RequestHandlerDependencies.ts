@@ -2,6 +2,7 @@ import CreateAccountRequestHandler from "../../requestHandlers/CreateAccountRequ
 import CompleteAccountRequestHandler from "../../requestHandlers/CompleteAccountRequestHandler";
 import HashPasswordCallerDefault from "../../external/hashingService/impl/HashPasswordCallerDefault";
 import DatabaseDependencies from "../common/DatabaseDependencies";
+import SpotifyDependencies from "../external/SpotifyDependencies";
 
 export default class RequestHandlerDependencies {
   private static createAccountRequestHandler: RequestHandler;
@@ -20,13 +21,16 @@ export default class RequestHandlerDependencies {
     return this.createAccountRequestHandler;
   }
 
-  //public static getCompleteAccountRequestHandler(): RequestHandler {
-  //  if (!this.completeAccountRequestHandler) {
-  //    this.completeAccountRequestHandler = new CompleteAccountRequestHandler();
-  //  }
+  public static getCompleteAccountRequestHandler(): RequestHandler {
+    if (!this.completeAccountRequestHandler) {
+      this.completeAccountRequestHandler = new CompleteAccountRequestHandler(
+        DatabaseDependencies.getUserDataDao(),
+        SpotifyDependencies.getAccessCredentialRetriever()
+      );
+    }
 
-  //  return this.completeAccountRequestHandler;
-  //}
+    return this.completeAccountRequestHandler;
+  }
 
   public static getHashPasswordCaller(): HashPasswordCaller {
     if (!this.hashPasswordCaller) {

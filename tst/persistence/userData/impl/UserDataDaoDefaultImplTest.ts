@@ -130,7 +130,9 @@ describe("UserDataDefaultImpl", () => {
         .withArgs(QUERY_QUERY_STRING, sinon.match.func)
         .yields(null, [USER_DATA_ROW]);
 
-      assert.equal(USER_DATA_ROW, await daoImpl.queryByUsername("name"));
+      let rows = await daoImpl.queryByUsername("name");
+
+      assert.equal(USER_DATA_ROW, rows[0]);
     });
   });
 });

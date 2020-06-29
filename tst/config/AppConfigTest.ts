@@ -27,32 +27,6 @@ describe("AppConfig", () => {
         assert.ok(ok);
       }
     });
-
-    it("it throws an exception when the config string is malformed", async () => {
-      s3Retriever.retrieveObject
-        .withArgs("jam-list-application-store", "jam-list-configuration")
-        .returns("{");
-
-      let ok = false;
-
-      try {
-        await AppConfig.initializeFromS3();
-      } catch (err) {
-        ok = err === "MalformedConfigError";
-      } finally {
-        assert.ok(ok);
-      }
-    });
-
-    it("it initializes the config with the s3 response", async () => {
-      s3Retriever.retrieveObject
-        .withArgs("jam-list-application-store", "jam-list-configuration")
-        .returns(TEST_CONFIG_STRING);
-
-      await AppConfig.initializeFromS3();
-
-      assert.equal("thing", AppConfig.getConfig().test);
-    });
   });
 
   describe("initializeFromCustomConfig", () => {

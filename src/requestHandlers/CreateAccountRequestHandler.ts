@@ -18,16 +18,20 @@ export default class CreateAccountRequestHandler implements RequestHandler {
     this.userPasswordDataDao = userPasswordDataDao;
   }
 
-  async handle(requestBody: string): Promise<RequestResponse> {
+  async handle(requestBody: any): Promise<RequestResponse> {
+    console.log("Entering Create Account Handler");
+
     if (!this.isRequestValid(requestBody)) {
       return { statusCode: "400" };
+    } else if (await this.doesUserExist(requestBody.userData.username)) {
+      return { statusCode: "470" };
+    } else if (await this.doesUserEmailExist(requestBody.userData.userEmail)) {
+      return { statusCode: "471" };
     }
 
-    const requestObject = JSON.parse(requestBody);
-
     return await Promise.all([
-      this.hashAndStorePassword(requestObject.userData, requestObject.password),
-      this.userDataDao.createUser(requestObject.userData),
+      this.hashAndStorePassword(requestBody.userData, requestBody.password),
+      this.userDataDao.createUser(requestBody.userData),
     ])
       .then(() => {
         return { statusCode: "200" };
@@ -40,18 +44,24 @@ export default class CreateAccountRequestHandler implements RequestHandler {
   }
 
   private isRequestValid(requestBody: string): boolean {
-    let requestObject;
-    try {
-      requestObject = JSON.parse(requestBody);
-    } catch (err) {
-      return false;
-    }
-
-    if (!isCreateUserRequest(requestObject)) {
+    if (!isCreateUserRequest(requestBody)) {
       return false;
     }
 
     return true;
+  }
+
+  private async doesUserExist(username: string): Promise<boolean> {
+    let users = await this.userDataDao.queryByUsername(username);
+    console.log(users);
+    return users.length > 0;
+  }
+
+  private async doesUserEmailExist(email: string): Promise<boolean> {
+    let rows = await this.userDataDao.queryByEmail(email);
+    console.log(rows);
+    console.log(rows.length);
+    return rows.length > 0;
   }
 
   private async hashAndStorePassword(

@@ -1,22 +1,44 @@
 import https from "https";
 import encode from "querystring";
+import { UserData } from "../../data/UserData";
+import { SpotifyApiCaller } from "./SpotifyApiCaller";
+import { RefreshAndStoreCredentialsDelegate } from "../../tasks/RefreshAndStoreCredentialsDelegate";
 
 export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
-  private credentialRefresher: AccessCredentialRefresher;
+  private refreshAndStoreDelegate: RefreshAndStoreCredentialsDelegate;
 
-  constructor(credentialRefresher: AccessCredentialRefresher) {
-    this.credentialRefresher = credentialRefresher;
+  constructor(refreshAndStoreDelegate: RefreshAndStoreCredentialsDelegate) {
+    this.refreshAndStoreDelegate = refreshAndStoreDelegate;
   }
 
   async call(
     requestOptions: any,
-    requestBody: any | null
+    requestBody: any | null,
+    userData: UserData
   ): Promise<SpotifyResponse> {
+    if (!userData.authToken) {
+      throw new Error("User does not have spotify credentials");
+    }
+
     try {
-      const response = await this.executeRequest(requestOptions, requestBody);
+      let response = await this.executeRequest(
+        requestOptions,
+        requestBody,
+        userData
+      );
 
       if (response.error) {
-        return await this.handleErrorResponse(response);
+        if (response.error.status !== 401) {
+          throw new Error(response.error.message);
+        }
+
+        const updatedUserData = await this.getUpdatedAuthentication(userData);
+
+        response = await this.executeRequest(
+          requestOptions,
+          requestBody,
+          updatedUserData
+        );
       }
 
       return response;
@@ -30,9 +52,16 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
 
   private executeRequest(
     requestOptions: any,
-    requestBody: any | null
+    requestBody: any | null,
+    userData: UserData
   ): Promise<SpotifyResponse> {
     return new Promise<SpotifyResponse>((resolve, reject) => {
+      if (!requestOptions.headers) {
+        requestOptions.headers = {};
+      }
+
+      requestOptions.headers.Authorization = `Bearer ${userData.authToken}`;
+
       const request = https.request(requestOptions, (res) => {
         res.setEncoding("utf8");
 
@@ -63,15 +92,19 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
     });
   }
 
-  private async handleErrorResponse(
-    response: SpotifyResponse
-  ): Promise<SpotifyResponse> {
-    if (response.error?.status === 401) {
-      return response;
-    } else {
-      return response;
+  private async getUpdatedAuthentication(
+    userData: UserData
+  ): Promise<UserData> {
+    if (!userData.refreshToken) {
+      throw new Error("user does not have a spotify refresh token");
     }
 
-    return response;
+    const refreshedToken = await this.refreshAndStoreDelegate.refreshAndStoreCredentials(
+      userData
+    );
+
+    userData.authToken = refreshedToken;
+
+    return userData;
   }
 }

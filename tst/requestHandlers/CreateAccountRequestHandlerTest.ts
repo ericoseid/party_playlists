@@ -8,9 +8,11 @@ import { UserDataDao } from "../persistence/userData/UserDataDao";
 describe("CreateAccountRequestHander", () => {
   const PASSWORD = "password";
   const HASHED_PASSWORD = "hashedPassword";
-  const INVALID_JSON_REQUEST = "{";
-  const INVALID_REQUEST = '{"field" : "data" }';
-  const REQUEST = `{ "userData" : { "username" : "username", "userEmail" : "email" }, "password" : "${PASSWORD}" }`;
+  const INVALID_REQUEST = { field: "data" };
+  const REQUEST = {
+    userData: { username: "username", userEmail: "email" },
+    password: PASSWORD,
+  };
 
   let hashPasswordCaller: any;
   let userPasswordDataDao: any;
@@ -42,15 +44,6 @@ describe("CreateAccountRequestHander", () => {
   });
 
   describe("handle", () => {
-    describe("when the request body is not valid JSON", () => {
-      it("returns an invalid request response object", async () => {
-        const response = await requestHandler.handle(INVALID_JSON_REQUEST);
-
-        assert.strictEqual("400", response.statusCode);
-        assert.ok(!response.body);
-      });
-    });
-
     describe("when the request body is not a valid request", () => {
       it("returns an invalid request response object", async () => {
         const response = await requestHandler.handle(INVALID_REQUEST);

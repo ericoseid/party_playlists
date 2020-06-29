@@ -9,12 +9,18 @@ describe("SpotifyApiCallerDefaultImpl", () => {
   const REQUEST_OPTIONS = { key: "value" };
   const REQUEST_BODY = { key: "value" };
   const RESPONSE = '{ "response": "response" }';
+  const USER_DATA = {
+    username: "username",
+    userEmail: "email",
+    authToken: "auth",
+    refreshToken: "refresh",
+  };
 
   let request: any;
   let requestObject: any;
   let responseObject: any;
   let refresher: AccessCredentialRefresher;
-  let apiCaller: SpotifyApiCaller;
+  let apiCaller: SpotifyApiCallerDefaultImpl;
 
   beforeEach(() => {
     request = sinon.stub(https, "request");
@@ -44,7 +50,7 @@ describe("SpotifyApiCallerDefaultImpl", () => {
 
       let ok = false;
       try {
-        await apiCaller.call(REQUEST_OPTIONS, null);
+        await apiCaller.call(REQUEST_OPTIONS, null, USER_DATA);
       } catch (err) {
         ok = true;
       } finally {
@@ -62,7 +68,7 @@ describe("SpotifyApiCallerDefaultImpl", () => {
         responseObject.emit("end");
       });
 
-      await apiCaller.call(REQUEST_OPTIONS, null);
+      await apiCaller.call(REQUEST_OPTIONS, null, USER_DATA);
 
       assert.ok(requestObject.write.notCalled);
     });
@@ -77,7 +83,7 @@ describe("SpotifyApiCallerDefaultImpl", () => {
         responseObject.emit("end");
       });
 
-      await apiCaller.call(REQUEST_OPTIONS, REQUEST_BODY);
+      await apiCaller.call(REQUEST_OPTIONS, REQUEST_BODY, USER_DATA);
 
       assert.ok(requestObject.write.calledOnce);
     });
