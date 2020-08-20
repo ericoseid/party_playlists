@@ -12,20 +12,12 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
   }
 
   async call(
-    requestOptions: any,
+    apiPath: string,
     requestBody: any | null,
     userData: UserData
   ): Promise<SpotifyResponse> {
-    if (!userData.authToken) {
-      throw new Error("User does not have spotify credentials");
-    }
-
     try {
-      let response = await this.executeRequest(
-        requestOptions,
-        requestBody,
-        userData
-      );
+      let response = await this.executeRequest(apiPath, requestBody, userData);
 
       if (response.error) {
         if (response.error.status !== 401) {
@@ -35,7 +27,7 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
         const updatedUserData = await this.getUpdatedAuthentication(userData);
 
         response = await this.executeRequest(
-          requestOptions,
+          apiPath,
           requestBody,
           updatedUserData
         );
@@ -51,16 +43,19 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
   }
 
   private executeRequest(
-    requestOptions: any,
+    apiPath: string,
     requestBody: any | null,
     userData: UserData
   ): Promise<SpotifyResponse> {
     return new Promise<SpotifyResponse>((resolve, reject) => {
-      if (!requestOptions.headers) {
-        requestOptions.headers = {};
+      if (!userData.authToken) {
+        throw new Error("User does not have authentication credentials");
       }
 
-      requestOptions.headers.Authorization = `Bearer ${userData.authToken}`;
+      const requestOptions = this.generateRequestOptions(
+        apiPath,
+        userData.authToken
+      );
 
       const request = https.request(requestOptions, (res) => {
         res.setEncoding("utf8");
@@ -90,6 +85,16 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
 
       request.end();
     });
+  }
+
+  private generateRequestOptions(apiPath: string, authToken: string): any {
+    return {
+      hostname: "api.spotify.com",
+      path: apiPath,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
   }
 
   private async getUpdatedAuthentication(

@@ -1,39 +1,23 @@
 import https from "https";
+import { SpotifyApiCaller } from "../SpotifyApiCaller";
+import { UserData } from "../../../data/UserData";
 
 export default class GetUserDataApiCaller {
-  public call(authToken: string): Promise<SpotifyResponse> {
-    const requestOptions = this.buildRequestOptions(authToken);
+  private static readonly API_PATH = "/v1/me";
 
-    return new Promise<SpotifyResponse>((resolve, reject) => {
-      const request = https.get(requestOptions, (res) => {
-        res.setEncoding("utf8");
+  private readonly apiCaller: SpotifyApiCaller;
 
-        let data = "";
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
-
-        res.on("end", () => {
-          const dataJson = JSON.parse(data);
-
-          resolve({
-            error: dataJson.error,
-            data: !dataJson.error ? dataJson : null,
-          });
-        });
-      });
-
-      request.on("error", (err) => reject(err));
-    });
+  constructor(apiCaller: SpotifyApiCaller) {
+    this.apiCaller = apiCaller;
   }
 
-  private buildRequestOptions(authToken: string) {
-    return {
-      hostname: "api.spotify.com",
-      path: "/v1/me",
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    };
+  async call(userData: UserData): Promise<string> {
+    const response = await this.apiCaller.call(
+      GetUserDataApiCaller.API_PATH,
+      null,
+      userData
+    );
+
+    return new Promise<string>((resolve, reject) => resolve());
   }
 }
