@@ -11,13 +11,21 @@ export default class GetUserDataApiCaller {
     this.apiCaller = apiCaller;
   }
 
-  async call(userData: UserData): Promise<string> {
+  async call(userData: UserData): Promise<any> {
     const response = await this.apiCaller.call(
       GetUserDataApiCaller.API_PATH,
       null,
       userData
     );
 
-    return new Promise<string>((resolve, reject) => resolve());
+    if (response.error) {
+      const e = new Error("Spotify call failed");
+
+      e.stack = e.message;
+
+      throw e;
+    }
+
+    return response.data;
   }
 }

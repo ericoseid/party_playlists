@@ -1,7 +1,18 @@
-import S3ObjectRetrieverDefaultImpl from "./external/s3/impl/S3ObjectRetrieverDefaultImpl";
-import AWS, { ServerlessApplicationRepository } from "aws-sdk";
-import AppConfig from "./config/AppConfig";
+import UserDataDaoDefaultImpl from "./persistence/userData/impl/UserDataDaoDefaultImpl";
+import mysql from "mysql";
 
-const s3: AWS.S3 = new AWS.S3();
+const connection = mysql.createConnection({
+  host: "localhost",
+  user: "ericoseid",
+  password: "TestPass",
+  database: "party_playlists_db",
+  port: 3306,
+  insecureAuth: true,
+});
 
-const s3Retriever: S3ObjectRetriever = new S3ObjectRetrieverDefaultImpl(s3);
+const userDataDao = new UserDataDaoDefaultImpl(connection);
+
+userDataDao.queryByUsername("y").then((userData) => {
+  console.log(userData);
+  connection.destroy();
+});

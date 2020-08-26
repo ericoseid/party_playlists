@@ -93,6 +93,7 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
       path: apiPath,
       headers: {
         Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
       },
     };
   }

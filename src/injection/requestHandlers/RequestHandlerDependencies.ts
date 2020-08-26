@@ -25,7 +25,8 @@ export default class RequestHandlerDependencies {
     if (!this.completeAccountRequestHandler) {
       this.completeAccountRequestHandler = new CompleteAccountRequestHandler(
         DatabaseDependencies.getUserDataDao(),
-        SpotifyDependencies.getAccessCredentialRetriever()
+        SpotifyDependencies.getAccessCredentialRetriever(),
+        SpotifyDependencies.getGetUserDataApiCaller()
       );
     }
 
