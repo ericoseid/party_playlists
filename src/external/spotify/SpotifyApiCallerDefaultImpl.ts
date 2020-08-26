@@ -3,6 +3,7 @@ import encode from "querystring";
 import { UserData } from "../../data/UserData";
 import { SpotifyApiCaller } from "./SpotifyApiCaller";
 import { RefreshAndStoreCredentialsDelegate } from "../../tasks/RefreshAndStoreCredentialsDelegate";
+import { SpotifyResponseHandlerImpl } from "./SpotifyResponseHandlerImpl";
 
 export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
   private refreshAndStoreDelegate: RefreshAndStoreCredentialsDelegate;
@@ -21,7 +22,7 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
 
       if (response.error) {
         if (response.error.status !== 401) {
-          throw new Error(response.error.message);
+          return response;
         }
 
         const updatedUserData = await this.getUpdatedAuthentication(userData);
@@ -54,7 +55,8 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
 
       const requestOptions = this.generateRequestOptions(
         apiPath,
-        userData.authToken
+        userData.authToken,
+        requestBody
       );
 
       const request = https.request(requestOptions, (res) => {
@@ -80,17 +82,22 @@ export default class SpotifyApiCallerDefaultImpl implements SpotifyApiCaller {
       });
 
       if (requestBody) {
-        request.write(encode.stringify(requestBody));
+        request.write(JSON.stringify(requestBody));
       }
 
       request.end();
     });
   }
 
-  private generateRequestOptions(apiPath: string, authToken: string): any {
+  private generateRequestOptions(
+    apiPath: string,
+    authToken: string,
+    requestBody: null | string
+  ): any {
     return {
       hostname: "api.spotify.com",
       path: apiPath,
+      method: requestBody ? "POST" : "GET",
       headers: {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 import { SpotifyResponseHandler } from "./SpotifyResponseHandler";
 
 export class SpotifyResponseHandlerImpl implements SpotifyResponseHandler {
-  handle(spotifyResponse: SpotifyResponse): object {
+  handle(spotifyResponse: SpotifyResponse): any {
     if (spotifyResponse.error) {
       const e = new Error("Spotify call failed");
 

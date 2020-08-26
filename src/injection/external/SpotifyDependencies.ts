@@ -12,6 +12,10 @@ import { GetUserPlaylistsApiCaller } from "../../external/spotify/playlists/GetU
 import { SpotifyResponseHandler } from "../../external/spotify/SpotifyResponseHandler";
 import { SpotifyResponseHandlerImpl } from "../../external/spotify/SpotifyResponseHandlerImpl";
 import { GetUserPlaylistApiCallerDefaulImpl } from "../../external/spotify/playlists/impl/GetUserPlaylistsApiCallerDefaultImpl";
+import { GetPlaylistTracksApiCaller } from "../../external/spotify/playlists/GetPlaylistTracksApiCaller";
+import GetPlaylistTracksApiCallerImpl from "../../external/spotify/playlists/impl/GetPlaylistTracksApiCallerImpl";
+import { AddTrackToPlaylistApiCaller } from "../../external/spotify/playlists/AddTrackToPlaylistApiCaller";
+import AddTrackToPlaylistApiCallerDefaultImpl from "../../external/spotify/playlists/impl/AddTrackToPlaylistApiCallerDefaulImpl";
 
 export default class SpotifyDependencies {
   private static accessCredentialRetriever: AccessCredentialRetriever;
@@ -19,6 +23,8 @@ export default class SpotifyDependencies {
   private static refreshAndStoreAccessCredentials: RefreshAndStoreCredentialsDelegate;
   private static getUserDataApiCaller: GetUserDataApiCaller;
   private static getUserPlaylistsApiCaller: GetUserPlaylistsApiCaller;
+  private static getPlaylistTracksApiCaller: GetPlaylistTracksApiCaller;
+  private static addTrackToPlaylistApiCaller: AddTrackToPlaylistApiCaller;
   private static spotifyApiCaller: SpotifyApiCaller;
   private static spotifyResponseHandler: SpotifyResponseHandler;
 
@@ -78,6 +84,28 @@ export default class SpotifyDependencies {
     }
 
     return this.getUserPlaylistsApiCaller;
+  }
+
+  public static getGetPlaylistTracksApiCaller(): GetPlaylistTracksApiCaller {
+    if (!this.getPlaylistTracksApiCaller) {
+      this.getPlaylistTracksApiCaller = new GetPlaylistTracksApiCallerImpl(
+        this.getSpotifyApiCaller(),
+        this.getSpotifyResponseHandler()
+      );
+    }
+
+    return this.getPlaylistTracksApiCaller;
+  }
+
+  public static getAddTrackToPlaylistApiCaller(): AddTrackToPlaylistApiCaller {
+    if (!this.addTrackToPlaylistApiCaller) {
+      this.addTrackToPlaylistApiCaller = new AddTrackToPlaylistApiCallerDefaultImpl(
+        this.getSpotifyApiCaller(),
+        this.getSpotifyResponseHandler()
+      );
+    }
+
+    return this.addTrackToPlaylistApiCaller;
   }
 
   public static getSpotifyApiCaller(): SpotifyApiCaller {

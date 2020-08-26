@@ -1,3 +1,3 @@
 export interface SpotifyResponseHandler {
-  handle: (response: SpotifyResponse) => object;
+  handle: (response: SpotifyResponse) => any;
 }

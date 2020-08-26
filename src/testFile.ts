@@ -25,9 +25,20 @@ AppConfig.initializeFromCustomString(`{
 const userDataDao = DatabaseDependencies.getUserDataDao();
 
 userDataDao.queryByUsername("y").then((userData) => {
-  console.log(userData);
+  const addTrack = SpotifyDependencies.getAddTrackToPlaylistApiCaller();
 
-  const apiCaller = SpotifyDependencies.getGetUserPlaylistsApiCaller();
-
-  apiCaller.getUserPlaylists(userData).then((data) => console.log(data));
+  addTrack
+    .addTrackToPlaylist(
+      userData,
+      "07oOLyPbBnkAhoAuUovm0d",
+      "4VD8h5PNOtqnc1V9vb55oV"
+    )
+    .then((data) => {
+      console.log("what");
+      console.log(data);
+    })
+    .catch((e) => {
+      console.log("error:");
+      console.log(e);
+    });
 });
