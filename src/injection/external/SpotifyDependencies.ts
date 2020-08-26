@@ -8,13 +8,19 @@ import { RefreshAndStoreCredentialsDelegate } from "../../tasks/RefreshAndStoreC
 import RefreshAndStoreCredentialDelegateImpl from "../../tasks/RefreshAndStoreCredentialDelegateImpl";
 import AccessCredentialRefresherDefaultImpl from "../../external/spotify/auth/impl/AccessCredentialRefresherDefaultImpl";
 import DatabaseDependencies from "../common/DatabaseDependencies";
+import { GetUserPlaylistsApiCaller } from "../../external/spotify/playlists/GetUserPlaylistsApiCaller";
+import { SpotifyResponseHandler } from "../../external/spotify/SpotifyResponseHandler";
+import { SpotifyResponseHandlerImpl } from "../../external/spotify/SpotifyResponseHandlerImpl";
+import { GetUserPlaylistApiCallerDefaulImpl } from "../../external/spotify/playlists/impl/GetUserPlaylistsApiCallerDefaultImpl";
 
 export default class SpotifyDependencies {
   private static accessCredentialRetriever: AccessCredentialRetriever;
   private static accessCredentialRefresher: AccessCredentialRefresher;
   private static refreshAndStoreAccessCredentials: RefreshAndStoreCredentialsDelegate;
   private static getUserDataApiCaller: GetUserDataApiCaller;
+  private static getUserPlaylistsApiCaller: GetUserPlaylistsApiCaller;
   private static spotifyApiCaller: SpotifyApiCaller;
+  private static spotifyResponseHandler: SpotifyResponseHandler;
 
   public static getAccessCredentialRetriever(): AccessCredentialRetriever {
     let config = AppConfig.getConfig();
@@ -63,6 +69,17 @@ export default class SpotifyDependencies {
     return this.getUserDataApiCaller;
   }
 
+  public static getGetUserPlaylistsApiCaller(): GetUserPlaylistsApiCaller {
+    if (!this.getUserPlaylistsApiCaller) {
+      this.getUserPlaylistsApiCaller = new GetUserPlaylistApiCallerDefaulImpl(
+        this.getSpotifyApiCaller(),
+        this.getSpotifyResponseHandler()
+      );
+    }
+
+    return this.getUserPlaylistsApiCaller;
+  }
+
   public static getSpotifyApiCaller(): SpotifyApiCaller {
     if (!this.spotifyApiCaller) {
       this.spotifyApiCaller = new SpotifyApiCallerDefaultImpl(
@@ -71,5 +88,13 @@ export default class SpotifyDependencies {
     }
 
     return this.spotifyApiCaller;
+  }
+
+  public static getSpotifyResponseHandler(): SpotifyResponseHandler {
+    if (!this.spotifyResponseHandler) {
+      this.spotifyResponseHandler = new SpotifyResponseHandlerImpl();
+    }
+
+    return this.spotifyResponseHandler;
   }
 }

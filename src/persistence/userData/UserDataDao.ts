@@ -5,7 +5,7 @@ export interface UserDataDao {
 
   updateUserData: (userData: UserData) => Promise<void>;
 
-  queryByUsername: (username: string) => Promise<UserData[]>;
+  queryByUsername: (username: string) => Promise<UserData>;
 
-  queryByEmail: (email: string) => Promise<UserData[]>;
+  queryByEmail: (email: string) => Promise<UserData>;
 }

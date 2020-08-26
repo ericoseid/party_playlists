@@ -74,13 +74,13 @@ export default class UserDataDaoDefaultImpl implements UserDataDao {
     return this.getQueryPromise(queryString);
   }
 
-  private getQueryPromise(queryString: string): Promise<UserData[]> {
-    return new Promise<UserData[]>((resolve, reject) => {
+  private getQueryPromise(queryString: string): Promise<UserData> {
+    return new Promise<UserData>((resolve, reject) => {
       this.dbConnection.query(queryString, (err, row) => {
         if (err) {
           reject(err.errno);
         } else {
-          resolve(row);
+          resolve(row[0]);
         }
       });
     });
