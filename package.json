@@ -19,7 +19,7 @@
     "tsc": "^1.20150623.0"
   },
   "devDependencies": {
-    "mocha": "^7.1.2"
+    "mocha": "^10.2.0"
   },
   "scripts": {
     "test": "nyc --reporter=html mocha './tst/**/*.js' --recursive"
